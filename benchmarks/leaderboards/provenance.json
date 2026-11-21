@@ -1,0 +1,18 @@
+{
+  "mode": "reference",
+  "rows": [
+    {
+      "adapter": "reference-tierer",
+      "implementation": "reference",
+      "metrics": {
+        "exact_tier_accuracy": 1.0,
+        "n_claims": 150,
+        "precision_citable": 1.0,
+        "recall_citable": 1.0,
+        "tier_mae": 0.0
+      }
+    }
+  ],
+  "suite": "provenance",
+  "workload_digest": "d56bd82574b42509196060b7fc64b7a4a656422adecfd5bfcce06164c131bc77"
+}

@@ -1,0 +1,17 @@
+{
+  "mode": "reference",
+  "rows": [
+    {
+      "adapter": "reference-compactor",
+      "implementation": "reference",
+      "metrics": {
+        "compression_ratio": 0.467706,
+        "keyword_retention": 0.658513,
+        "tokens_after": 11406,
+        "tokens_before": 21428
+      }
+    }
+  ],
+  "suite": "compress",
+  "workload_digest": "42390cd9412efb94d290e73fc6026d41f41d6b8d948b7dec32217da160e933ad"
+}

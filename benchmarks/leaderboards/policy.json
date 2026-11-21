@@ -1,0 +1,16 @@
+{
+  "mode": "reference",
+  "rows": [
+    {
+      "adapter": "reference-policy-gate",
+      "implementation": "reference",
+      "metrics": {
+        "benign_pass_rate": 1.0,
+        "bypass_resistance": 1.0,
+        "n_probes": 120
+      }
+    }
+  ],
+  "suite": "policy",
+  "workload_digest": "28fce33ea342aed7cdd728b2a613dcfd111bdefa363aef77f74ca24aca99a88c"
+}

@@ -1,0 +1,119 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agent-benchmark-suite"
+version = "0.1.0"
+description = "Unified, reproducible benchmark harness for agentic AI: token compression, provenance verification, Pareto routing, and zero-trust policy enforcement leaderboards"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+authors = [
+    { name = "Sandeep Hipparagi" }
+]
+keywords = [
+    "agentic-ai",
+    "benchmark",
+    "llm-evaluation",
+    "context-compression",
+    "provenance",
+    "model-routing",
+    "policy-enforcement",
+    "leaderboard",
+    "reproducibility",
+    "llmops",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = [
+    "typer>=0.12",
+    "rich>=13.7",
+]
+
+[project.optional-dependencies]
+# Native adapters run the flagship libraries in-process. They are optional so
+# the harness always boots in deterministic reference mode with zero heavy deps.
+native = [
+    "agent-snr>=0.1.1",
+    "provenance-guard>=0.2.1",
+    "pareto-router @ git+https://github.com/Sandeep-Hipparagi/Inference-Pareto-Router.git",
+    "context-guard @ git+https://github.com/Sandeep-Hipparagi/context-guard.git",
+]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+    "mypy>=1.10",
+]
+
+[project.scripts]
+agent-bench = "agent_bench.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Sandeep-Hipparagi/agent-benchmark-suite"
+Repository = "https://github.com/Sandeep-Hipparagi/agent-benchmark-suite"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agent_bench"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.mypy]
+strict = true
+warn_return_any = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[[tool.mypy.overrides]]
+module = ["typer", "rich.*"]
+ignore_missing_imports = true
+
+# Native flagship imports are optional extras; ignore their stubs when absent.
+[[tool.mypy.overrides]]
+module = [
+    "agent_snr",
+    "agent_snr.*",
+    "context_guard",
+    "context_guard.*",
+    "pareto_router",
+    "pareto_router.*",
+    "epistemic_guard",
+    "epistemic_guard.*",
+]
+ignore_missing_imports = true
+
+# Tests are checked but untyped-def strictness is relaxed for test functions.
+[[tool.mypy.overrides]]
+module = [
+    "tests.*",
+    "test_core",
+    "test_workloads",
+    "test_adapters",
+    "test_runner_report",
+    "test_cli",
+]
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = ["SIM108"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --basetemp=.pytest_tmp"
