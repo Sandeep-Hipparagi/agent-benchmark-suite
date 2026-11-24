@@ -46,8 +46,8 @@ dependencies = [
 native = [
     "agent-snr>=0.1.1",
     "provenance-guard>=0.2.1",
-    "pareto-router @ git+https://github.com/Sandeep-Hipparagi/Inference-Pareto-Router.git",
-    "context-guard @ git+https://github.com/Sandeep-Hipparagi/context-guard.git",
+    "pareto-router>=0.1.2",
+    "context-guards>=0.1.0",
 ]
 dev = [
     "pytest>=8.0",
