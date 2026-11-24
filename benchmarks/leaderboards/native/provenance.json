@@ -1,0 +1,29 @@
+{
+  "mode": "native",
+  "rows": [
+    {
+      "adapter": "provenance-guard/auditor",
+      "implementation": "native:provenance-guard",
+      "metrics": {
+        "exact_tier_accuracy": 0.826667,
+        "n_claims": 150,
+        "precision_citable": 1.0,
+        "recall_citable": 0.955224,
+        "tier_mae": 0.173333
+      }
+    },
+    {
+      "adapter": "reference-tierer",
+      "implementation": "reference",
+      "metrics": {
+        "exact_tier_accuracy": 1.0,
+        "n_claims": 150,
+        "precision_citable": 1.0,
+        "recall_citable": 1.0,
+        "tier_mae": 0.0
+      }
+    }
+  ],
+  "suite": "provenance",
+  "workload_digest": "d56bd82574b42509196060b7fc64b7a4a656422adecfd5bfcce06164c131bc77"
+}

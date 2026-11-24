@@ -21,3 +21,4 @@ workspace_audit/
 .DS_Store
 
 .pytest_tmp/
+.venv-native/

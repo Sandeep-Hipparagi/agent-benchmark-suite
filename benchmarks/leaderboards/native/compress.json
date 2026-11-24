@@ -1,0 +1,37 @@
+{
+  "mode": "native",
+  "rows": [
+    {
+      "adapter": "agent-snr/firewall",
+      "implementation": "native:agent-snr",
+      "metrics": {
+        "compression_ratio": -0.184432,
+        "keyword_retention": 0.614699,
+        "tokens_after": 25380,
+        "tokens_before": 21428
+      }
+    },
+    {
+      "adapter": "context-guard/compressor",
+      "implementation": "native:context-guard",
+      "metrics": {
+        "compression_ratio": 0.400504,
+        "keyword_retention": 0.725187,
+        "tokens_after": 12846,
+        "tokens_before": 21428
+      }
+    },
+    {
+      "adapter": "reference-compactor",
+      "implementation": "reference",
+      "metrics": {
+        "compression_ratio": 0.467706,
+        "keyword_retention": 0.658513,
+        "tokens_after": 11406,
+        "tokens_before": 21428
+      }
+    }
+  ],
+  "suite": "compress",
+  "workload_digest": "42390cd9412efb94d290e73fc6026d41f41d6b8d948b7dec32217da160e933ad"
+}

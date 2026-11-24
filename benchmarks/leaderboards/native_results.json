@@ -1,0 +1,131 @@
+{
+  "_meta": {
+    "note": "Native-mode results from actual installed flagship libraries (agent-snr, context-guard, provenance-guard via epistemic-guard, pareto-router, aegis-core dist). Reference rows included for baseline comparison. Latency excluded (environment-specific). Captured locally; see audit/PHASE_9_NATIVE_BENCHMARKS.md."
+  },
+  "compress": {
+    "mode": "native",
+    "rows": [
+      {
+        "adapter": "agent-snr/firewall",
+        "implementation": "native:agent-snr",
+        "metrics": {
+          "compression_ratio": -0.184432,
+          "keyword_retention": 0.614699,
+          "tokens_after": 25380,
+          "tokens_before": 21428
+        }
+      },
+      {
+        "adapter": "context-guard/compressor",
+        "implementation": "native:context-guard",
+        "metrics": {
+          "compression_ratio": 0.400504,
+          "keyword_retention": 0.725187,
+          "tokens_after": 12846,
+          "tokens_before": 21428
+        }
+      },
+      {
+        "adapter": "reference-compactor",
+        "implementation": "reference",
+        "metrics": {
+          "compression_ratio": 0.467706,
+          "keyword_retention": 0.658513,
+          "tokens_after": 11406,
+          "tokens_before": 21428
+        }
+      }
+    ],
+    "suite": "compress",
+    "workload_digest": "42390cd9412efb94d290e73fc6026d41f41d6b8d948b7dec32217da160e933ad"
+  },
+  "policy": {
+    "mode": "native",
+    "rows": [
+      {
+        "adapter": "aegis-core/policy",
+        "implementation": "native:aegis-core",
+        "metrics": {
+          "benign_pass_rate": 1.0,
+          "bypass_resistance": 1.0,
+          "n_probes": 120
+        }
+      },
+      {
+        "adapter": "reference-policy-gate",
+        "implementation": "reference",
+        "metrics": {
+          "benign_pass_rate": 1.0,
+          "bypass_resistance": 1.0,
+          "n_probes": 120
+        }
+      }
+    ],
+    "suite": "policy",
+    "workload_digest": "28fce33ea342aed7cdd728b2a613dcfd111bdefa363aef77f74ca24aca99a88c"
+  },
+  "provenance": {
+    "mode": "native",
+    "rows": [
+      {
+        "adapter": "provenance-guard/auditor",
+        "implementation": "native:provenance-guard",
+        "metrics": {
+          "exact_tier_accuracy": 0.826667,
+          "n_claims": 150,
+          "precision_citable": 1.0,
+          "recall_citable": 0.955224,
+          "tier_mae": 0.173333
+        }
+      },
+      {
+        "adapter": "reference-tierer",
+        "implementation": "reference",
+        "metrics": {
+          "exact_tier_accuracy": 1.0,
+          "n_claims": 150,
+          "precision_citable": 1.0,
+          "recall_citable": 1.0,
+          "tier_mae": 0.0
+        }
+      }
+    ],
+    "suite": "provenance",
+    "workload_digest": "d56bd82574b42509196060b7fc64b7a4a656422adecfd5bfcce06164c131bc77"
+  },
+  "route": {
+    "mode": "native",
+    "rows": [
+      {
+        "adapter": "pareto-router/policy",
+        "implementation": "native:pareto-router",
+        "metrics": {
+          "mean_effort_score": 0.406958,
+          "n_decisions": 120,
+          "overthinking_penalized": 0,
+          "tier_distribution": {
+            "COMPACT": 28,
+            "FRONTIER": 30,
+            "MID": 62
+          }
+        }
+      },
+      {
+        "adapter": "reference-pareto",
+        "implementation": "reference",
+        "metrics": {
+          "mean_effort_score": 0.406958,
+          "n_decisions": 120,
+          "overthinking_penalized": 0,
+          "tier_distribution": {
+            "COMPACT": 28,
+            "FRONTIER": 30,
+            "MID": 62
+          }
+        }
+      }
+    ],
+    "suite": "route",
+    "workload_digest": "42390cd9412efb94d290e73fc6026d41f41d6b8d948b7dec32217da160e933ad"
+  }
+}

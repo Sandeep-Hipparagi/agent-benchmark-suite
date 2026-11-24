@@ -87,6 +87,9 @@ class AgentSNRCompressionAdapter:
     name = "agent-snr/firewall"
     implementation = "native:agent-snr"
 
+    # OpenAI role -> agent-snr FrameRole vocabulary.
+    _ROLE_MAP = {"tool": "tool_result"}
+
     def __init__(self) -> None:
         self._firewall: Any = None
 
@@ -101,8 +104,12 @@ class AgentSNRCompressionAdapter:
 
     def compress(self, messages: list[dict[str, str]]) -> list[str]:
         assert self._firewall is not None
+        mapped = [
+            {**m, "role": self._ROLE_MAP.get(m.get("role", ""), m.get("role", ""))}
+            for m in messages
+        ]
         budgeted, _action, _metrics = self._firewall.process_outbound(
-            session_id="agent-bench", node_id="bench", messages=messages
+            session_id="agent-bench", node_id="bench", messages=mapped
         )
         return [str(m.get("content", "")) for m in budgeted]
 

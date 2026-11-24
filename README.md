@@ -75,6 +75,56 @@ but are intentionally **excluded from drift verification** — they are
 environment-specific. Functional metrics are byte-deterministic per workload
 digest.
 
+## Native vs. reference results (real flagship libraries, locally executed)
+
+Running `--mode native` with the actual libraries installed (agent-snr,
+context-guard, provenance-guard, pareto-router, and aegis-core's compiled
+`SchemaValidator` dist) produces [`benchmarks/leaderboards/NATIVE_LEADERBOARD.md`](benchmarks/leaderboards/native/NATIVE_LEADERBOARD.md)
+and [`native_results.json`](benchmarks/leaderboards/native_results.json). Key findings
+from the captured run — reported exactly as measured, including the unfavorable one:
+
+### compress (21,428 tokens in)
+
+| Adapter | Implementation | Tokens after | Ratio | Keyword retention |
+| :--- | :--- | ---: | ---: | ---: |
+| `context-guard/compressor` | native | 12,846 | **0.4005** | **0.7252** |
+| `reference-compactor` | reference | 11,406 | 0.4677 | 0.6585 |
+| `agent-snr/firewall` | native | 25,380 | **−0.1844** | 0.6147 |
+
+Honest finding: `agent-snr` **expanded** this corpus (ratio < 0). Its SNR
+firewall optimizes signal quality (loop detection, correction nudges, budget
+packing), not raw token minimization — on a redundancy-heavy synthetic corpus
+it adds content rather than dropping it. The harness reports this verbatim.
+
+### provenance (150 claims) — native vs. ground truth
+
+| Adapter | Precision | Recall | Exact-tier | MAE |
+| :--- | ---: | ---: | ---: | ---: |
+| `provenance-guard/auditor` (native) | 1.0 | 0.9552 | 0.8267 | 0.1733 |
+| `reference-tierer` | 1.0 | 1.0 | 1.0 | 0.0 |
+
+The native library agrees on every citable decision (precision 1.0) but
+disagrees on some exact tier assignments for unlisted TLD-fallback domains —
+exactly the kind of divergence the harness exists to surface.
+
+### route — native and reference in exact agreement
+
+`pareto-router` native decisions match the reference port byte-for-byte
+(FRONTIER 30 · MID 62 · COMPACT 28, mean effort 0.406958, 120/120 decisions) —
+strong evidence the reference port is faithful.
+
+### policy — both fail-closed
+
+`aegis-core`'s compiled `SchemaValidator` and the reference gate both achieve
+bypass resistance 1.0 with benign pass rate 1.0 (120 probes, 50% adversarial).
+
+Reproduce natively:
+
+```bash
+pip install -e ".[native]"                      # flagship libraries
+agent-bench run --suite all --mode native --output-dir benchmarks/leaderboards/native
+```
+
 ## Quickstart
 
 ```bash

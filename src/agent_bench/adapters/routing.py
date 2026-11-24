@@ -89,12 +89,17 @@ class ParetoRouterAdapter:
     def decide(self, logic: float, knowledge: float, strategy: str) -> tuple[str, float]:
         assert self._policy is not None and self._scores_cls is not None
         eff_knowledge = 0.5 if knowledge == -1.0 else knowledge
-        metadata = {"is_low_entropy": True} if knowledge == -1.0 else None
+        metadata: dict[str, Any] = {"is_low_entropy": True} if knowledge == -1.0 else {}
         scores = self._scores_cls(
-            logic_score=logic, knowledge_score=eff_knowledge, metadata=metadata
+            logic_score=logic,
+            knowledge_score=eff_knowledge,
+            latency_ms=0.0,
+            evaluator_name="agent-benchmark-suite",
+            metadata=metadata,
         )
-        decision = self._policy.evaluate_coordinates(scores, self._strategies(strategy))
-        return str(decision.tier.value), float(decision.effort_score)
+        decision = self._policy.evaluate_coordinates(scores, self._strategies[strategy])
+        # Normalize tier casing to the reference vocabulary (FRONTIER/MID/COMPACT).
+        return str(decision.tier.value).upper(), float(decision.effort_score)
 
 
 def get_routing_adapters(prefer_native: bool) -> list[RoutingTarget]:

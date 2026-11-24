@@ -1,0 +1,35 @@
+{
+  "mode": "native",
+  "rows": [
+    {
+      "adapter": "pareto-router/policy",
+      "implementation": "native:pareto-router",
+      "metrics": {
+        "mean_effort_score": 0.406958,
+        "n_decisions": 120,
+        "overthinking_penalized": 0,
+        "tier_distribution": {
+          "COMPACT": 28,
+          "FRONTIER": 30,
+          "MID": 62
+        }
+      }
+    },
+    {
+      "adapter": "reference-pareto",
+      "implementation": "reference",
+      "metrics": {
+        "mean_effort_score": 0.406958,
+        "n_decisions": 120,
+        "overthinking_penalized": 0,
+        "tier_distribution": {
+          "COMPACT": 28,
+          "FRONTIER": 30,
+          "MID": 62
+        }
+      }
+    }
+  ],
+  "suite": "route",
+  "workload_digest": "42390cd9412efb94d290e73fc6026d41f41d6b8d948b7dec32217da160e933ad"
+}

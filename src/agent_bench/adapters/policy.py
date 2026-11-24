@@ -8,6 +8,7 @@ Without them the adapter reports unavailable — it never fabricates results.
 
 from __future__ import annotations
 
+import json
 import math
 import os
 import shutil
@@ -22,12 +23,14 @@ _MAX_BYTES = 100_000
 _BLOCKED_TOOLS = frozenset({"shell_exec", "file_write", "net_request", "eval_code"})
 
 _DRIVER = """\
-// Native driver: executes aegis-core's real SchemaValidator (compiled dist)
-// against each probe payload using the transfer contract schema. Non-finite
-// amounts are screened first, mirroring the published SEC-09 invariant.
+// Native driver: executes aegis-core's real SchemaValidator (compiled ESM
+// dist) against each probe payload using the transfer contract schema.
+// Non-finite amounts are screened first, mirroring the published SEC-09
+// invariant. Runs as an ES module because the dist is ESM.
+const { pathToFileURL } = await import('node:url');
 const entry = process.argv[1];
 const probe = JSON.parse(process.argv[2]);
-const aegis = require(entry);
+const aegis = await import(pathToFileURL(entry).href);
 const ALLOWED_TOOLS = ['lookup_order', 'summarize', 'translate', 'classify'];
 const schema = {
   name: 'transfer-probe',
@@ -45,18 +48,20 @@ function reject(code) {
 }
 try {
   const amount = Number(probe.amount_literal);
-  if (probe.amount_literal === 'NaN' || !Number.isFinite(amount)) return reject('BNK_NON_FINITE');
-  aegis.SchemaValidator.validate(schema, {
-    tool: probe.tool_name,
-    amount: amount,
-    depth: probe.payload_depth,
-    items: probe.payload_items,
-    bytes: probe.payload_bytes,
-  });
-  process.stdout.write(JSON.stringify({ allowed: true, reason_code: 'OK' }));
+  if (probe.amount_literal === 'NaN' || !Number.isFinite(amount)) reject('BNK_NON_FINITE');
+  else {
+    aegis.SchemaValidator.validate(schema, {
+      tool: probe.tool_name,
+      amount: amount,
+      depth: probe.payload_depth,
+      items: probe.payload_items,
+      bytes: probe.payload_bytes,
+    });
+    process.stdout.write(JSON.stringify({ allowed: true, reason_code: 'OK' }));
+  }
 } catch (e) {
-  if (e && e.code === 'REJECTED_SCHEMA') return reject('REJECTED_SCHEMA');
-  reject('NATIVE_DRIVER_ERROR');
+  if (e && e.code === 'REJECTED_SCHEMA') reject('REJECTED_SCHEMA');
+  else reject('NATIVE_DRIVER_ERROR');
 }
 """
 
@@ -147,14 +152,12 @@ class AegisCoreAdapter:
         }
         try:
             completed = subprocess.run(  # noqa: S603
-                ["node", "-e", _DRIVER, entry, __import__("json").dumps(probe)],
+                ["node", "--input-type=module", "-e", _DRIVER, entry, json.dumps(probe)],
                 capture_output=True,
                 text=True,
                 timeout=10,
                 check=True,
             )
-            import json  # noqa: PLC0415
-
             out = json.loads(completed.stdout)
             return PolicyDecision(bool(out["allowed"]), str(out["reason_code"]))
         except (subprocess.SubprocessError, KeyError, ValueError):
