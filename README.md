@@ -8,6 +8,14 @@ and zero-trust policy enforcement — against **seeded, SHA-256-digested
 workloads**, with **CI-enforced drift checks (≤ 3%)** so committed numbers can
 never silently rot.
 
+## Product Walkthrough & Architecture Demo
+
+https://github.com/Sandeep-Hipparagi/agent-benchmark-suite/releases/download/media-v1/brag.mp4
+
+[![agent-benchmark-suite demo](assets/media/preview.webp)](https://github.com/Sandeep-Hipparagi/agent-benchmark-suite/releases/tag/media-v1)
+
+---
+
 ```mermaid
 flowchart LR
     W[Seeded workloads\n120 traces · 150 claims · 120 probes] -->|SHA-256 digest| R[Runner\nwarmups · N-run median + IQR]
